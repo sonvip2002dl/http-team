@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Xu hướng dữ liệu</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      max-width: 400px;
+      text-align: center;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      function updateTrends() {
+        $.getJSON("https://api.thingspeak.com/channels/2149942/feeds.json?results=1", function(data) {
+          var field1 = data.feeds[0].field1;
+          var field2 = data.feeds[0].field2;
+
+          var trend1 = "";
+          if (field1 == 0) {
+            trend1 = "Xu hướng giảm";
+          } else if (field1 == 1) {
+            trend1 = "Ổn định";
+          } else if (field1 == 2) {
+            trend1 = "Xu hướng tăng";
+          }
+
+          var trend2 = "";
+          if (field2 == 0) {
+            trend2 = "Xu hướng giảm";
+          } else if (field2 == 1) {
+            trend2 = "Ổn định";
+          } else if (field2 == 2) {
+            trend2 = "Xu hướng tăng";
+          }
+
+          $("#field1-trend").text(trend1);
+          $("#field2-trend").text(trend2);
+        });
+      }
+
+      updateTrends();
+      setInterval(updateTrends, 5000);
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Xu hướng dữ liệu</h1>
+    <p>Trường 1: <span id="field1-trend"></span></p>
+    <p>Trường 2: <span id="field2-trend"></span></p>
+  </div>
+</body>
+</html>
